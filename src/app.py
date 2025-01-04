@@ -1,10 +1,16 @@
 import requests
 import streamlit as st
-from streamlit import components
 
 # Function to fetch news from NewsAPI
-def fetch_news(api_key):
+def fetch_news(api_key, category=None, search_query=None):
     url = f'https://newsapi.org/v2/top-headlines?country=us&apiKey={api_key}'
+
+    if category:
+        url += f"&category={category}"
+
+    if search_query:
+        url += f"&q={search_query}"
+
     try:
         response = requests.get(url)
         news_data = response.json()
@@ -27,11 +33,17 @@ Welcome to the **Latest News** app! Here, you can read the latest headlines from
 Stay updated with current events from various categories including politics, sports, business, and more.
 """)
 
+# Create a filter for news category
+category = st.selectbox("Choose a news category:", ["General", "Business", "Entertainment", "Health", "Science", "Sports", "Technology"])
+
+# Create a search bar
+search_query = st.text_input("Search for news articles:")
+
 # Adding a spinner while data is loading
 with st.spinner("Fetching the latest news..."):
-    # Fetch the latest news
-    api_key = '800efd0db3e64f85a6176a0b0f5eac8f'
-    news_articles = fetch_news(api_key)
+    # Hardcoding the API key here
+    api_key = "800efd0db3e64f85a6176a0b0f5eac8f"  # Replace with your actual API key
+    news_articles = fetch_news(api_key, category, search_query)
 
 # Displaying the news articles
 if news_articles:
@@ -62,5 +74,5 @@ else:
 # Add a footer with information about the app
 st.markdown("""
 ---
-Built with ❤️ by **Your Name** | Powered by [NewsAPI](https://newsapi.org/)
+Built with ❤️ by **Ami** | Powered by [NewsAPI](https://newsapi.org/)
 """)
